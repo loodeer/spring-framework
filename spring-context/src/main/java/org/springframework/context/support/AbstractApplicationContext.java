@@ -550,39 +550,57 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+			// 2. 获取BeanFactory;默认实现是DefaultListableBeanFactory，加载BeanDefinition并注册到BeanDefinitionRegistry
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
+			// 3. BeanFactory的预准备工作，BeanFactory进行一些设置，如context的类加载器等
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
+				// 4. BeanFactory 准备工作完成后进行后置处理工作
 				postProcessBeanFactory(beanFactory);
 
+				// 和后面的 end 一起，应该是监控
 				StartupStep beanPostProcess = this.applicationStartup.start("spring.context.beans.post-process");
 				// Invoke factory processors registered as beans in the context.
+				// 5. 实例化并调用实现了 BeanFactoryPostProcessor 接口的bean
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// Register bean processors that intercept bean creation.
+				// 6. 注册BeanPostProcessor（bean的后置处理器），在创建bean的前后执行
 				registerBeanPostProcessors(beanFactory);
 				beanPostProcess.end();
 
 				// Initialize message source for this context.
+				// 7. 初始化MessageSource组件
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+				// 8. 初始化事件派发器
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				// 9. 子类重写这个方法，在容器刷新的时候可以自定义逻辑
 				onRefresh();
 
 				// Check for listener beans and register them.
+				// 10. 注册应用的监听器。就是注册实现了 ApplicationListener 接口的监听器 bean
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
+				/**
+				 * 11. 初始化所有剩下的非懒加载的单例bean
+				 * ① 初始化创建非懒加载方式的单例bean实例（未设置属性）
+				 * ② 填充属性
+				 * ③ 初始化方法调用，比如调用afterPropertiesSet方法、init-method方法
+				 * ④ 调用BeanPostProcessor（后置处理器）对实例bean进行后置处理
+				 */
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				// 12. 完成context的刷新。主要是调用LifecycleProcessor的onRefresh()方法，并且发布事件ContextRefreshedEvent
 				finishRefresh();
 			}
 
@@ -914,6 +932,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.
+		// 实例化所有非懒加载的单例bean
 		beanFactory.preInstantiateSingletons();
 	}
 
