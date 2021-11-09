@@ -21,9 +21,11 @@ package org.springframework.beans.factory;
  * {@link ClassLoader class loader}; that is, the class loader used by the
  * present bean factory to load bean classes.
  *
- * <p>This is mainly intended to be implemented by framework classes which
+ * <p>This is mainly intended to be implemented by framework classes which | which  和 themselves  都是指 framework classes
  * have to pick up application classes by name despite themselves potentially
  * being loaded from a shared class loader.
+ *
+ * 断句 This is mainly intended to be implemented by framework classes， which have to pick up application classes by name， despite themselves potentially being loaded from a shared class loader.
  *
  * <p>For a list of all bean lifecycle methods, see the
  * {@link BeanFactory BeanFactory javadocs}.

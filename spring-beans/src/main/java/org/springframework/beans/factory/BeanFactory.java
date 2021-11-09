@@ -21,14 +21,14 @@ import org.springframework.core.ResolvableType;
 import org.springframework.lang.Nullable;
 
 /**
- * The root interface for accessing a Spring bean container.
+ * The root interface for accessing a Spring bean container. | 访问 spring bean 容器的根接口
  *
- * <p>This is the basic client view of a bean container;
+ * <p>This is the basic client view of a bean container; | bean 容器最简单最基础的接口
  * further interfaces such as {@link ListableBeanFactory} and
  * {@link org.springframework.beans.factory.config.ConfigurableBeanFactory}
- * are available for specific purposes.
+ * are available for specific purposes. | ListableBeanFactory 和 ConfigurableBeanFactory 等接口进行了进一步封装，可用于处理对应的场景。
  *
- * <p>This interface is implemented by objects that hold a number of bean definitions,
+ * <p>This interface is implemented by objects that hold a number of bean definitions, | 实现BeanFacoty接口的对象持有一个 bean definitions 的 map。
  * each uniquely identified by a String name. Depending on the bean definition,
  * the factory will return either an independent instance of a contained object
  * (the Prototype design pattern), or a single shared instance (a superior
@@ -64,14 +64,14 @@ import org.springframework.lang.Nullable;
  * the immediate parent factory will be asked. Beans in this factory instance
  * are supposed to override beans of the same name in any parent factory.
  *
- * <p>Bean factory implementations should support the standard bean lifecycle interfaces
- * as far as possible. The full set of initialization methods and their standard order is:
+ * <p>Bean factory implementations should support the standard bean lifecycle interfaces |  Bean工厂实现应该尽可能支持标准的Bean生命周期接口。
+ * as far as possible. The full set of initialization methods and their standard order is: | 完整的初始化方法集及其标准顺序为
  * <ol>
- * <li>BeanNameAware's {@code setBeanName}
- * <li>BeanClassLoaderAware's {@code setBeanClassLoader}
- * <li>BeanFactoryAware's {@code setBeanFactory}
- * <li>EnvironmentAware's {@code setEnvironment}
- * <li>EmbeddedValueResolverAware's {@code setEmbeddedValueResolver}
+ * <li>BeanNameAware's {@code setBeanName} | 1. BeanNameAware.setBeanName
+ * <li>BeanClassLoaderAware's {@code setBeanClassLoader} | 2. BeanClassLoaderAware.setBeanClassLoader
+ * <li>BeanFactoryAware's {@code setBeanFactory} | 3. BeanFactoryAware.setBeanFactory
+ * <li>EnvironmentAware's {@code setEnvironment} | 4. EnvironmentAware.setEnvironment
+ * <li>EmbeddedValueResolverAware's {@code setEmbeddedValueResolver} | 5. EmbeddedValueResolverAware.setEmbeddedValueResolver
  * <li>ResourceLoaderAware's {@code setResourceLoader}
  * (only applicable when running in an application context)
  * <li>ApplicationEventPublisherAware's {@code setApplicationEventPublisher}
