@@ -5,4 +5,6 @@
 
 	<bean id="factoryBean" class="org.springframework.beans.factory.FactoryBeanTests$NullReturningFactoryBean"/>
 
+	<bean id="myFactoryBean" class="org.springframework.beans.factory.FactoryBeanTests$MyNullReturningFactoryBean" />
+
 </beans>

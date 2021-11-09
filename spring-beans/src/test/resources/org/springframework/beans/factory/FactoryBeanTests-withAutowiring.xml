@@ -20,7 +20,7 @@
   <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="properties">
       <props>
-        <prop key="myName">yourName</prop>
+        <prop key="myName">loodeer</prop>
       </props>
     </property>
   </bean>

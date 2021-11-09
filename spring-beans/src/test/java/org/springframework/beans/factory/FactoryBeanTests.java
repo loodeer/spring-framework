@@ -60,7 +60,9 @@ public class FactoryBeanTests {
 		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
 		new XmlBeanDefinitionReader(factory).loadBeanDefinitions(WITH_AUTOWIRING_CONTEXT);
 
+		// org.springframework.beans.factory.config.PropertyPlaceholderConfigurer 占位符替换
 		BeanFactoryPostProcessor ppc = (BeanFactoryPostProcessor) factory.getBean("propertyPlaceholderConfigurer");
+		// 激活bean工厂的后置处理器
 		ppc.postProcessBeanFactory(factory);
 
 		assertThat(factory.getType("betaFactory")).isNull();
@@ -73,7 +75,7 @@ public class FactoryBeanTests {
 		assertThat(alpha.getBeta()).isSameAs(beta);
 		assertThat(beta.getGamma()).isSameAs(gamma);
 		assertThat(beta.getGamma()).isSameAs(gamma2);
-		assertThat(beta.getName()).isEqualTo("yourName");
+		assertThat(beta.getName()).isEqualTo("loodeer");
 	}
 
 	@Test
@@ -138,6 +140,28 @@ public class FactoryBeanTests {
 		@Override
 		public boolean isSingleton() {
 			return true;
+		}
+	}
+
+
+	@Test
+	public void testMyFactoryBeanReturnsNull() {
+		DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
+		new XmlBeanDefinitionReader(factory).loadBeanDefinitions(RETURNS_NULL_CONTEXT);
+
+		assertThat(factory.getBean("myFactoryBean").toString()).isEqualTo("null");
+	}
+
+	public static class MyNullReturningFactoryBean implements FactoryBean<Object> {
+
+		@Override
+		public Object getObject() throws Exception {
+			return null;
+		}
+
+		@Override
+		public Class<?> getObjectType() {
+			return null;
 		}
 	}
 

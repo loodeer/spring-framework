@@ -43,7 +43,7 @@ public class Spr5475Tests {
 					.addConstructorArgValue("bogusArg").getBeanDefinition(),
 				"Error creating bean with name 'foo': No matching factory method found on class " +
 				"[org.springframework.beans.factory.Spr5475Tests$Foo]: factory method 'noArgFactory(String)'. " +
-				"Check that a method with the specified name and arguments exists and that it is static.");
+				"Check that a method with the specified name and arguments exists and that it is static1.");
 	}
 
 	@Test
