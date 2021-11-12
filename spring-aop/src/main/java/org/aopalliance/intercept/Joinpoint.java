@@ -23,19 +23,19 @@ import javax.annotation.Nullable;
 
 /**
  * This interface represents a generic runtime joinpoint (in the AOP
- * terminology).
+ * terminology). | 这个接口表示一个通用的运行时连接点
  *
- * <p>A runtime joinpoint is an <i>event</i> that occurs on a static
+ * <p>A runtime joinpoint is an <i>event</i> that occurs on a static | 运行时连接点是发生在静态连接点上的 事件
  * joinpoint (i.e. a location in a program). For instance, an
- * invocation is the runtime joinpoint on a method (static joinpoint).
+ * invocation is the runtime joinpoint on a method (static joinpoint). | 例如，调用是方法上的运行时连接点(静态连接点)。
  * The static part of a given joinpoint can be generically retrieved
  * using the {@link #getStaticPart()} method.
  *
- * <p>In the context of an interception framework, a runtime joinpoint
+ * <p>In the context of an interception framework, a runtime joinpoint | 具有拦截功能的框架中说的运行时连接点，通常是指 对可访问对象的 具象化
  * is then the reification of an access to an accessible object (a
  * method, a constructor, a field), i.e. the static part of the
  * joinpoint. It is passed to the interceptors that are installed on
- * the static joinpoint.
+ * the static joinpoint. | 连接点作为参数传给拦截器使用。
  *
  * @author Rod Johnson
  * @see Interceptor
@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
 public interface Joinpoint {
 
 	/**
-	 * Proceed to the next interceptor in the chain.
+	 * Proceed to the next interceptor in the chain. | 继续执行下一个拦截器
 	 * <p>The implementation and the semantics of this method depends
 	 * on the actual joinpoint type (see the children interfaces).
 	 * @return see the children interfaces' proceed definition

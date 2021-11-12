@@ -37,11 +37,11 @@ import org.springframework.util.ClassUtils;
 
 /**
  * JDK-based {@link AopProxy} implementation for the Spring AOP framework,
- * based on JDK {@link java.lang.reflect.Proxy dynamic proxies}.
+ * based on JDK {@link java.lang.reflect.Proxy dynamic proxies}. | 基于JDK的 Proxy 类
  *
  * <p>Creates a dynamic proxy, implementing the interfaces exposed by
  * the AopProxy. Dynamic proxies <i>cannot</i> be used to proxy methods
- * defined in classes, rather than interfaces.
+ * defined in classes, rather than interfaces. | 只能代理接口
  *
  * <p>Objects of this type should be obtained through proxy factories,
  * configured by an {@link AdvisedSupport} class. This class is internal
@@ -123,6 +123,16 @@ final class JdkDynamicAopProxy implements AopProxy, InvocationHandler, Serializa
 		if (logger.isTraceEnabled()) {
 			logger.trace("Creating JDK dynamic proxy: " + this.advised.getTargetSource());
 		}
+
+		/**
+		 * JDK动态代理的示例：
+		 * InvocationHandler invocationHandler = (proxy, method, args) -> {
+		 *     System.out.println("我是invocationHandler，被调用的方法是: " + method.getName());
+		 *     return null;
+		 * };
+		 * IService proxyService = (IService) Proxy.newProxyInstance(IService.class.getClassLoader(), new Class[]{IService.class}, invocationHandler);
+		 * proxyService.m1();
+		 */
 		return Proxy.newProxyInstance(classLoader, this.proxiedInterfaces, this);
 	}
 

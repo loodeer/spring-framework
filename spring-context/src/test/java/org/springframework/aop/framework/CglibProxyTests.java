@@ -160,7 +160,7 @@ public class CglibProxyTests extends AbstractAopProxyTests implements Serializab
 	@Test
 	public void testToStringInvocation() {
 		PrivateCglibTestBean bean = new PrivateCglibTestBean();
-		bean.setName("Rob Harrop");
+		bean.setName("loodeer");
 
 		AdvisedSupport as = new AdvisedSupport();
 		as.setTarget(bean);
@@ -168,7 +168,7 @@ public class CglibProxyTests extends AbstractAopProxyTests implements Serializab
 		AopProxy aop = new CglibAopProxy(as);
 
 		PrivateCglibTestBean proxy = (PrivateCglibTestBean) aop.getProxy();
-		assertThat(proxy.toString()).as("The name property has been overwritten by the constructor").isEqualTo("Rob Harrop");
+		assertThat(proxy.toString()).as("The name property has been overwritten by the constructor").isEqualTo("loodeer");
 	}
 
 	@Test

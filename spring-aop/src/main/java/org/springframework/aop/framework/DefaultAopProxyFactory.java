@@ -51,6 +51,9 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 
 	@Override
 	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
+		// 使用 JDK动态代理 还是 Cglib代理
+		// 1. 设置了 proxyTargetClass=true 则强制使用 Cglib 代理 ???
+		// 2. 没强制的情况下，对象类实现了接口则默认使用JDK代理，没实现接口必须使用Cglib代理
 		if (!NativeDetector.inNativeImage() &&
 				(config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config))) {
 			Class<?> targetClass = config.getTargetClass();

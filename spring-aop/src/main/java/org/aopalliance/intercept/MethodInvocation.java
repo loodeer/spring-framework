@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * upon method-call.
  *
  * <p>A method invocation is a joinpoint and can be intercepted by a
- * method interceptor.
+ * method interceptor. | MethodInvocation 是连接点，可以被 MethodInterceptor 拦截
  *
  * @author Rod Johnson
  * @see MethodInterceptor

@@ -21,8 +21,8 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.MethodMatcher;
 
 /**
- * Internal framework class, combining a MethodInterceptor instance
- * with a MethodMatcher for use as an element in the advisor chain.
+ * Internal framework class, combining a MethodInterceptor instance | 框架内部类，带匹配条件的拦截器
+ * with a MethodMatcher for use as an element in the advisor chain. | 还可以这么玩
  *
  * @author Rod Johnson
  */

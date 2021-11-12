@@ -50,7 +50,7 @@ public class DefaultPointcutAdvisor extends AbstractGenericPointcutAdvisor imple
 	}
 
 	/**
-	 * Create a DefaultPointcutAdvisor that matches all methods.
+	 * Create a DefaultPointcutAdvisor that matches all methods. | 默认增强器匹配所有方法
 	 * <p>{@code Pointcut.TRUE} will be used as Pointcut.
 	 * @param advice the Advice to use
 	 */
