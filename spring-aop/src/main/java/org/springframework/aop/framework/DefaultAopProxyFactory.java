@@ -49,6 +49,26 @@ import org.springframework.core.NativeDetector;
 public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 
 
+	/**
+	 * JDK和Cglib方式的总结：
+	 * 如果目标对象实现了接口，默认情况下会采用JDK的动态代理实现AOP
+	 * 如果目标对象实现了接口，可以强制使用CGLIB实现AOP
+	 * 如果目标没有实现了接口，必须采用CGLIB
+	 * Spring会自动在JDK动态代理和CGLIB之间切换
+	 *
+	 * 如何强制使用CGLIB实现AOP？
+	 * 1. 添加CGLIB库，Spring_HOME/cglib/*.jar
+	 * 2. 在Spring配置文件中加入 <aop:aspectj-autoproxy proxy-target-class="true" />
+	 *
+	 * JDK动态代理和CGLIB字节码生成的区别？
+	 * JDK动态代理只能对实现了接口的类生成代理，而不能针对类。
+	 * CGLIB是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法，因为是继承，所以该类或方法不能声明成final。
+	 *
+	 * @param config the AOP configuration in the form of an
+	 * AdvisedSupport object
+	 * @return
+	 * @throws AopConfigException
+	 */
 	@Override
 	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
 		// 使用 JDK动态代理 还是 Cglib代理

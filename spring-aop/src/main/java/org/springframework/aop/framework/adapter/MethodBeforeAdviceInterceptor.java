@@ -27,9 +27,14 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * Interceptor to wrap a {@link MethodBeforeAdvice}.
+ * Interceptor to wrap a {@link MethodBeforeAdvice}. | MethodBeforeAdvice 的拦截器
  * <p>Used internally by the AOP framework; application developers should not
  * need to use this class directly.
+ *
+ * 前置增强 实现逻辑
+ * 1. 在拦截器链中放置 MethodBeforeAdviceInterceptor
+ * 2. 在 MethodBeforeAdviceInterceptor 中放置了 AspectJMethodBeforeAdvice
+ * 3. 在调用 invoke 时，首先串联调用
  *
  * @author Rod Johnson
  * @see AfterReturningAdviceInterceptor
@@ -38,6 +43,9 @@ import org.springframework.util.Assert;
 @SuppressWarnings("serial")
 public class MethodBeforeAdviceInterceptor implements MethodInterceptor, BeforeAdvice, Serializable {
 
+	/**
+	 * 前置增强
+	 */
 	private final MethodBeforeAdvice advice;
 
 

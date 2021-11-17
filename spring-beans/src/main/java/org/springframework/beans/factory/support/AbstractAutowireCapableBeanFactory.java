@@ -149,8 +149,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	private final Set<Class<?>> ignoredDependencyInterfaces = new HashSet<>();
 
 	/**
-	 * The name of the currently created bean, for implicit dependency registration
-	 * on getBean etc invocations triggered from a user-specified Supplier callback.
+	 * The name of the currently created bean, for implicit dependency registration | 保存刚创建的bean的名称
+	 * on getBean etc invocations triggered from a user-specified Supplier callback. | 线程维度的变量
 	 */
 	private final NamedThreadLocal<String> currentlyCreatedBean = new NamedThreadLocal<>("Currently created bean");
 
@@ -1257,7 +1257,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	}
 
 	/**
-	 * Overridden in order to implicitly register the currently created bean as
+	 * Overridden in order to implicitly register the currently created bean as | 隐式地
 	 * dependent on further beans getting programmatically retrieved during a
 	 * {@link Supplier} callback.
 	 * @since 5.0

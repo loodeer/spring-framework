@@ -71,6 +71,14 @@ import org.springframework.util.ReflectionUtils;
  * <p>Proxies created using this class are thread-safe if the underlying
  * (target) class is thread-safe.
  *
+ * CGLIB 是一个强大的高性能的代码生成包。
+ * 它广泛地被许多AOP的框架使用，例如 Spring AOP 和 dynaop，为他们提供方法的 interception（拦截）。
+ * 流行的 OR Mapping 工具 Hibernate 也使用 CGLIB 来代理单端 single-ended （多对一和一对一）关联。
+ * EasyMock 和 jMock 是通过模仿对象来测试 Java 代码的包，它们都通过使用 CGLIB 来为那些没有接口的类创建模仿对象。
+ *
+ * CGLIB 包的底层通过使用一个小而快的字节码处理器框架 ASM,来转换字节码并生成新的类。
+ * 除了 CGLIB 包，脚本语言例如 Groovy 和 BeanShell，也是使用 ASM 来生成 Java 的字节码。
+ *
  * @author Rod Johnson
  * @author Rob Harrop
  * @author Juergen Hoeller
@@ -650,7 +658,7 @@ class CglibAopProxy implements AopProxy, Serializable {
 
 
 	/**
-	 * General purpose AOP callback. Used when the target is dynamic or when the
+	 * General purpose AOP callback. Used when the target is dynamic or when the | 生成目标AOP回调
 	 * proxy is not frozen.
 	 */
 	private static class DynamicAdvisedInterceptor implements MethodInterceptor, Serializable {

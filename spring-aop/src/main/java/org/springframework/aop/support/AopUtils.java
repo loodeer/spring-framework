@@ -62,7 +62,7 @@ public abstract class AopUtils {
 	 * <p>This method additionally checks if the given object is an instance
 	 * of {@link SpringProxy}.
 	 * @param object the object to check
-	 * @see #isJdkDynamicProxy
+	 * @see #isJdkDynamicProxy | 就是 isJdkDynamicProxy 和 isCglibProxy 两个方法合并起来
 	 * @see #isCglibProxy
 	 */
 	public static boolean isAopProxy(@Nullable Object object) {

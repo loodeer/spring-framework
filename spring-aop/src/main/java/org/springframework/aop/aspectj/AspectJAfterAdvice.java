@@ -28,6 +28,7 @@ import org.springframework.lang.Nullable;
 /**
  * Spring AOP advice wrapping an AspectJ after advice method.
  *
+ * 后置增强，没有提供中间类，直接在拦截器链中使用了中间的 AspectJAfterAdvice
  * @author Rod Johnson
  * @since 2.0
  */
@@ -49,6 +50,7 @@ public class AspectJAfterAdvice extends AbstractAspectJAdvice
 			return mi.proceed();
 		}
 		finally {
+			// 激活增强方法
 			invokeAdviceMethod(getJoinPointMatch(), null, null);
 		}
 	}

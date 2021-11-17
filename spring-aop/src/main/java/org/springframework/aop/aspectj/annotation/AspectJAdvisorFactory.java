@@ -63,7 +63,7 @@ public interface AspectJAdvisorFactory {
 
 	/**
 	 * Build Spring AOP Advisors for all annotated At-AspectJ methods
-	 * on the specified aspect instance.
+	 * on the specified aspect instance. | 增强器提取
 	 * @param aspectInstanceFactory the aspect instance factory
 	 * (not the aspect instance itself in order to avoid eager instantiation)
 	 * @return a list of advisors for this class

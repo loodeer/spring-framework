@@ -31,9 +31,9 @@ import org.springframework.aop.Advisor;
 public interface AdvisorAdapterRegistry {
 
 	/**
-	 * Return an {@link Advisor} wrapping the given advice.
+	 * Return an {@link Advisor} wrapping the given advice. | 返回 advice 包装后的 advisor , advisor 持有 advice
 	 * <p>Should by default at least support
-	 * {@link org.aopalliance.intercept.MethodInterceptor},
+	 * {@link org.aopalliance.intercept.MethodInterceptor}, | 这四个类都是 advice
 	 * {@link org.springframework.aop.MethodBeforeAdvice},
 	 * {@link org.springframework.aop.AfterReturningAdvice},
 	 * {@link org.springframework.aop.ThrowsAdvice}.

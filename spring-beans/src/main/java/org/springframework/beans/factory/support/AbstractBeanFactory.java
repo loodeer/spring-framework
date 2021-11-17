@@ -1215,7 +1215,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
 	/**
 	 * Return the bean name, stripping out the factory dereference prefix if necessary,
-	 * and resolving aliases to canonical names.
+	 * and resolving aliases to canonical names. | 别名转为规范名称
 	 * @param name the user-specified name
 	 * @return the transformed bean name
 	 */
@@ -1788,8 +1788,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	}
 
 	/**
-	 * Get the object for the given bean instance, either the bean
-	 * instance itself or its created object in case of a FactoryBean.
+	 * Get the object for the given bean instance, either the bean | 获取bean的实例对象
+	 * instance itself or its created object in case of a FactoryBean. | 既可以是bean实例本身，也可以是bean工厂创建的对象
 	 * @param beanInstance the shared bean instance
 	 * @param name the name that may include factory dereference prefix
 	 * @param beanName the canonical bean name
@@ -1819,7 +1819,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		if (!(beanInstance instanceof FactoryBean)) {
 			return beanInstance;
 		}
-
+		// 下面开始是bean工厂创建对象的逻辑
 		Object object = null;
 		if (mbd != null) {
 			mbd.isFactoryBean = true;

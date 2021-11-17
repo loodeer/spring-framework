@@ -19,8 +19,8 @@ package org.springframework.aop;
 import org.springframework.lang.Nullable;
 
 /**
- * A {@code TargetSource} is used to obtain the current "target" of
- * an AOP invocation, which will be invoked via reflection if no around
+ * A {@code TargetSource} is used to obtain the current "target" of | TargetSource存放了AOP拦截的目标对象
+ * an AOP invocation, which will be invoked via reflection if no around | 如果没有around通知结束拦截链，会通过反射调用该目标
  * advice chooses to end the interceptor chain itself.
  *
  * <p>If a {@code TargetSource} is "static", it will always return

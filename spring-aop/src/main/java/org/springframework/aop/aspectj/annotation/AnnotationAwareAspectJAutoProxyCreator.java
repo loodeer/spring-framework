@@ -28,8 +28,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * {@link AspectJAwareAdvisorAutoProxyCreator} subclass that processes all AspectJ
- * annotation aspects in the current application context, as well as Spring Advisors.
+ * {@link AspectJAwareAdvisorAutoProxyCreator} subclass that processes all AspectJ | AspectJAwareAdvisorAutoProxyCreator 的子类
+ * annotation aspects in the current application context, as well as Spring Advisors. | 处理 AspectJ 注解 和 spring 增强
  *
  * <p>Any AspectJ annotated classes will automatically be recognized, and their
  * advice applied if Spring AOP's proxy-based model is capable of applying it.
@@ -40,6 +40,9 @@ import org.springframework.util.Assert;
  *
  * <p>Processing of Spring Advisors follows the rules established in
  * {@link org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator}.
+ *
+ * 继承了 AbstractAutoProxyCreator，在父类 AbstractAutoProxyCreator 中实现了 BeanPostProcessor 接口
+ * 而实现 BeanPostProcessor 后，当 Spring 加载这个 Bean 时会在实例化前调用其 postProcessAfterInitialization 方法，而我们对于 AOP 逻辑的分析也由此开始。
  *
  * @author Rod Johnson
  * @author Juergen Hoeller
@@ -89,6 +92,8 @@ public class AnnotationAwareAspectJAutoProxyCreator extends AspectJAwareAdvisorA
 	@Override
 	protected List<Advisor> findCandidateAdvisors() {
 		// Add all the Spring advisors found according to superclass rules.
+		// 当使用注解方式配置AOP的时候，并不是丢弃了对XML配置的支持
+		// 在这里调用父类方法加载配置文件中的AOP声明
 		List<Advisor> advisors = super.findCandidateAdvisors();
 		// Build Advisors for all AspectJ aspects in the bean factory.
 		if (this.aspectJAdvisorsBuilder != null) {
