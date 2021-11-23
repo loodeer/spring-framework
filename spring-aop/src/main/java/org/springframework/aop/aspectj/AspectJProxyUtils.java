@@ -35,7 +35,7 @@ import org.springframework.util.StringUtils;
 public abstract class AspectJProxyUtils {
 
 	/**
-	 * Add special advisors if necessary to work with a proxy chain that contains AspectJ advisors:
+	 * Add special advisors if necessary to work with a proxy chain that contains AspectJ advisors: | 添加特殊的拦截器 ExposeInvocationInterceptor 到拦截器链首位
 	 * concretely, {@link ExposeInvocationInterceptor} at the beginning of the list.
 	 * <p>This will expose the current Spring AOP invocation (necessary for some AspectJ pointcut
 	 * matching) and make available the current AspectJ JoinPoint. The call will have no effect

@@ -32,13 +32,13 @@ import org.springframework.lang.Nullable;
 
 /**
  * Spring's implementation of the AOP Alliance
- * {@link org.aopalliance.intercept.MethodInvocation} interface,
+ * {@link org.aopalliance.intercept.MethodInvocation} interface, | MethodInvocation 系列接口实现之一，
  * implementing the extended
- * {@link org.springframework.aop.ProxyMethodInvocation} interface.
+ * {@link org.springframework.aop.ProxyMethodInvocation} interface. | 实现了 MethodInvocation 的子接口 ProxyMethodInvocation
  *
- * <p>Invokes the target object using reflection. Subclasses can override the
- * {@link #invokeJoinpoint()} method to change this behavior, so this is also
- * a useful base class for more specialized MethodInvocation implementations.
+ * <p>Invokes the target object using reflection. Subclasses can override the | 通过反射调用目标对象
+ * {@link #invokeJoinpoint()} method to change this behavior, so this is also | 子类可以通过重写{@link #invokeJoinpoint()} 自定义逻辑，
+ * a useful base class for more specialized MethodInvocation implementations. | 所以可以作为一个基础类
  *
  * <p>It is possible to clone an invocation, to invoke {@link #proceed()}
  * repeatedly (once per clone), using the {@link #invocableClone()} method.
@@ -159,8 +159,10 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 	@Nullable
 	public Object proceed() throws Throwable {
 		// We start with an index of -1 and increment early.
-		// 执行完所有增强后执行切点方法
+		// 判断拦截器链式调用是否还有下一个拦截器需要调用
+		// 如果执行到链条的末尾，则直接调用连接点方法，即 直接调用目标方法
 		if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
+			// 调用连接点，即目标方法 (spring里的连接点就是method)
 			return invokeJoinpoint();
 		}
 
@@ -185,16 +187,16 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 		else {
 			// It's an interceptor, so we just invoke it: The pointcut will have
 			// been evaluated statically before this object was constructed.
-			// 普通的拦截器，直接调用invoke方法。this对象构造之前，切入点已经被静态赋值。
 			// 普通拦截器，直接调用拦截器，比如 ExposeInvocationInterceptor、DelegatePerTargetObjectIntroductionInterceptor、
 			// MethodBeforeAdviceInterceptor、AspectJAroundAdvice、AspectJAfterAdvice
+			// 传入 this 即 ReflectiveMethodInvocation 实例，这样就可以形成一个调用的链条了
 			return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
 		}
 	}
 
 	/**
-	 * Invoke the joinpoint using reflection.
-	 * Subclasses can override this to use custom invocation.
+	 * Invoke the joinpoint using reflection. | 通过反射调用 切点
+	 * Subclasses can override this to use custom invocation. | 子类可以重写定制
 	 * @return the return value of the joinpoint
 	 * @throws Throwable if invoking the joinpoint resulted in an exception
 	 */
@@ -202,7 +204,6 @@ public class ReflectiveMethodInvocation implements ProxyMethodInvocation, Clonea
 	protected Object invokeJoinpoint() throws Throwable {
 		return AopUtils.invokeJoinpointUsingReflection(this.target, this.method, this.arguments);
 	}
-
 
 	/**
 	 * This implementation returns a shallow copy of this invocation object,

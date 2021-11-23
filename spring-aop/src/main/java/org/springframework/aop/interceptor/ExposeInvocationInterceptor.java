@@ -22,6 +22,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 import org.springframework.aop.Advisor;
+import org.springframework.aop.aspectj.AbstractAspectJAdvice;
 import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.core.PriorityOrdered;
@@ -88,12 +89,18 @@ public final class ExposeInvocationInterceptor implements MethodInterceptor, Pri
 	private ExposeInvocationInterceptor() {
 	}
 
+	/**
+	 * 在这里加进去的 {@link org.springframework.aop.aspectj.AspectJProxyUtils#makeAdvisorChainAspectJCapableIfNecessary(java.util.List)}
+	 * ExposeInvocationInterceptor 的作用是传递 MethodInvocation，
+	 * 在后续的任何调用链环节，只要需要用到当前的 MethodInvocation 就可以通过 {@link org.springframework.aop.interceptor.ExposeInvocationInterceptor#currentInvocation()} 获得 {@link AbstractAspectJAdvice#getJoinPointMatch()}
+	 */
 	@Override
 	@Nullable
 	public Object invoke(MethodInvocation mi) throws Throwable {
 		MethodInvocation oldInvocation = invocation.get();
 		invocation.set(mi);
 		try {
+			// 执行下一个拦截器
 			return mi.proceed();
 		}
 		finally {
