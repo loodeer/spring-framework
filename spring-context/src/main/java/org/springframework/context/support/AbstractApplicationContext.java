@@ -543,10 +543,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
+		// 使用互斥锁，防止启动、关闭及注册回调函数的重复调用，保证上下文的对象状态
 		synchronized (this.startupShutdownMonitor) {
 			StartupStep contextRefresh = this.applicationStartup.start("spring.context.refresh");
 
 			// Prepare this context for refreshing.
+			// 提前准备启动参数
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
@@ -555,11 +557,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Prepare the bean factory for use in this context.
 			// 3. BeanFactory的预准备工作，BeanFactory进行一些设置，如context的类加载器等
+			// 初始化和设置 BeanFactory 的初始参数
 			prepareBeanFactory(beanFactory);
 
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
-				// 4. BeanFactory 准备工作完成后进行后置处理工作
+				// 4. 调用 BeanFactory 实例化后置处理器
+				// SpringBoot的核心上下文实现类AnnotationConfigEmbeddedWebApplicationContext通过重写postProcessBeanFactory方法来实现在SpringBoot场景下对Bean配置的加载
 				postProcessBeanFactory(beanFactory);
 
 				// 和后面的 end 一起，应该是监控
@@ -570,6 +574,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Register bean processors that intercept bean creation.
 				// 6. 注册BeanPostProcessor（bean的后置处理器），在创建bean的前后执行
+				// 在 Bean 工厂中注册 Bean 的后置处理器（BeanPostProcessor），Bean 的代理的生成由它来实现
 				registerBeanPostProcessors(beanFactory);
 				beanPostProcess.end();
 
@@ -583,6 +588,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Initialize other special beans in specific context subclasses.
 				// 9. 子类重写这个方法，在容器刷新的时候可以自定义逻辑
+				// SpringBoot 核心基类 EmbeddedWebApplicationContext 就是用这个方法来初始化容器的
 				onRefresh();
 
 				// Check for listener beans and register them.
@@ -597,6 +603,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				 * ③ 初始化方法调用，比如调用afterPropertiesSet方法、init-method方法
 				 * ④ 调用BeanPostProcessor（后置处理器）对实例bean进行后置处理
 				 */
+				// 把所有非延迟加载的 Bean 初始化并设置冻结标志位，防止重新实例化 Bean 浪费资源
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
@@ -611,9 +618,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				}
 
 				// Destroy already created singletons to avoid dangling resources.
+				// 销毁已经存在的bean
 				destroyBeans();
 
 				// Reset 'active' flag.
+				// 释放标志位，标识其可以重新启动
 				cancelRefresh(ex);
 
 				// Propagate exception to caller.

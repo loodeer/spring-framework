@@ -222,16 +222,20 @@ public class InjectionMetadata {
 		protected void inject(Object target, @Nullable String requestingBeanName, @Nullable PropertyValues pvs)
 				throws Throwable {
 
+			// 按照 Bean 名称从 BeanFactory 中获取或创建 Bean 的实例，然后使用反射将其注入属性的值中
 			if (this.isField) {
 				Field field = (Field) this.member;
+				// 如果属性是私有方法，泽也会注入
 				ReflectionUtils.makeAccessible(field);
 				field.set(target, getResourceToInject(target, requestingBeanName));
 			}
 			else {
+				// 检查是否可以跳过当前属性
 				if (checkPropertySkipping(pvs)) {
 					return;
 				}
 				try {
+					// 按照 Bean 名称从 BeanFactory 中获取或创建 Bean 的实例，然后使用反射调用方法设置当前属性的 Bean
 					Method method = (Method) this.member;
 					ReflectionUtils.makeAccessible(method);
 					method.invoke(target, getResourceToInject(target, requestingBeanName));

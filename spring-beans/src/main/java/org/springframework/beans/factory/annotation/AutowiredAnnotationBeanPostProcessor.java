@@ -69,8 +69,8 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link org.springframework.beans.factory.config.BeanPostProcessor BeanPostProcessor}
- * implementation that autowires annotated fields, setter methods, and arbitrary
+ * {@link org.springframework.beans.factory.config.BeanPostProcessor BeanPostProcessor} | 该类是BeanPostProcessor的实现，
+ * implementation that autowires annotated fields, setter methods, and arbitrary | 自动装配 注解字段，set方法，任意配置方法
  * config methods. Such members to be injected are detected through annotations:
  * by default, Spring's {@link Autowired @Autowired} and {@link Value @Value}
  * annotations.
@@ -129,6 +129,9 @@ import org.springframework.util.StringUtils;
  * @see #setAutowiredAnnotationType
  * @see Autowired
  * @see Value
+ *
+ * {@link org.springframework.context.annotation.ConfigurationClassPostProcessor} 实现了对 Bean 配置类注解的解析和注册（如@Bean、@Configuration注解）;
+ * AutowiredAnnotationBeanPostProcessor 实现了对自动注入类注解的解析和注册（如@Autowired、@Value注解）。
  */
 public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationAwareBeanPostProcessor,
 		MergedBeanDefinitionPostProcessor, PriorityOrdered, BeanFactoryAware {
@@ -267,10 +270,12 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 
 	@Override
 	@Nullable
-	public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, final String beanName)
-			throws BeanCreationException {
+	// 本方法主要用于在实例化Bean并且在Bean的构造方法上有@Autowired注解时选择合适的构造方法
+	// Spring注解构造方法自动注入的核心实现逻辑是在选取构造方法后找到依赖属性，然后在BeanFactory获取 Bean时或者单例方法启动初始化时，反射当前构造方法来实现 DI（依赖注入）的自动注入。
+	public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, final String beanName) throws BeanCreationException {
 
 		// Let's check for lookup methods here...
+		// 寻找当前类中（包含其父类）含有LookUp注解的方法并为其添加重写方法。在每次调用方法时实际调用的是在LookUp注解中配置的方法，以此实现方法的灵活定制
 		if (!this.lookupMethodsChecked.contains(beanName)) {
 			if (AnnotationUtils.isCandidateClass(beanClass, Lookup.class)) {
 				try {
@@ -305,6 +310,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 		}
 
 		// Quick check on the concurrent map first, with minimal locking.
+		// 先判断在缓存中是否存在当前构造方法数组
 		Constructor<?>[] candidateConstructors = this.candidateConstructorsCache.get(beanClass);
 		if (candidateConstructors == null) {
 			// Fully synchronized resolution now...
@@ -313,6 +319,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 				if (candidateConstructors == null) {
 					Constructor<?>[] rawCandidates;
 					try {
+						// 获取当前class的所有构造方法
 						rawCandidates = beanClass.getDeclaredConstructors();
 					}
 					catch (Throwable ex) {
@@ -332,7 +339,9 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 						else if (primaryConstructor != null) {
 							continue;
 						}
+						// 获取当前构造方法的注解属性 @Autowire、@Value等
 						MergedAnnotation<?> ann = findAutowiredAnnotation(candidate);
+						// 如果这个构造方法不存在注解属性，则使用这个构造方法的参数类型去父类中寻找
 						if (ann == null) {
 							Class<?> userClass = ClassUtils.getUserClass(beanClass);
 							if (userClass != beanClass) {
@@ -363,14 +372,21 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 								}
 								requiredConstructor = candidate;
 							}
+							// 如果找到了注解，并且发现有的构造方法已经有了注解，则会报错
+							// 也就是说只能在一个构造方法上有注解，包括父类构造方法
+							// 如果在这个构造方法上有注解但是没有参数，则说明根本不需要注入，此时也会报错，此处省略抛出异常的代码
+							// 判断是否是强制依赖注入，如果 required= false，则有多个 Autowire 在构造方法上不报错。主要针对前两个：1 个是无参构造，1 个是多个构造方法有 Autowire
+							// 选出合适的构造方法并将其放在集合中
 							candidates.add(candidate);
 						}
 						else if (candidate.getParameterCount() == 0) {
+							// 如果没有注解，则直接选择一个默认的构造方法，因为调用方的目的是实例化class
 							defaultConstructor = candidate;
 						}
 					}
 					if (!candidates.isEmpty()) {
 						// Add default constructor to list of optional constructors, as fallback.
+						// 如果找到了合适的构造方法，但是这个构造方法不是 require=true（默认）强依赖，就采用默认的构造方法
 						if (requiredConstructor == null) {
 							if (defaultConstructor != null) {
 								candidates.add(defaultConstructor);
@@ -384,6 +400,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 						}
 						candidateConstructors = candidates.toArray(new Constructor<?>[0]);
 					}
+					// 如果没有找到含有注解的构造方法，但是这个类只定义了一个有参构造方法，则默认使用当前构造方法
 					else if (rawCandidates.length == 1 && rawCandidates[0].getParameterCount() > 0) {
 						candidateConstructors = new Constructor<?>[] {rawCandidates[0]};
 					}
@@ -397,6 +414,7 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 					else {
 						candidateConstructors = new Constructor<?>[0];
 					}
+					// 设置缓存
 					this.candidateConstructorsCache.put(beanClass, candidateConstructors);
 				}
 			}
@@ -405,15 +423,19 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 	}
 
 	@Override
+	// Spring 的注入分为构造方法、方法、参数、属性和注解类型
 	public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) {
+		// 获取自动注入的元数据
 		InjectionMetadata metadata = findAutowiringMetadata(beanName, bean.getClass(), pvs);
 		try {
+			// 获取当前属性的元数据实体并注入目标属性中
 			metadata.inject(bean, beanName, pvs);
 		}
 		catch (BeanCreationException ex) {
 			throw ex;
 		}
 		catch (Throwable ex) {
+			// 如果属性注入发生异常，例如类型不匹配或者类型转换错误等，则抛出BeanCreationException异常
 			throw new BeanCreationException(beanName, "Injection of autowired dependencies failed", ex);
 		}
 		return pvs;
@@ -453,16 +475,22 @@ public class AutowiredAnnotationBeanPostProcessor implements SmartInstantiationA
 
 	private InjectionMetadata findAutowiringMetadata(String beanName, Class<?> clazz, @Nullable PropertyValues pvs) {
 		// Fall back to class name as cache key, for backwards compatibility with custom callers.
+		// 优先使用Bean名称进行缓存，如果Bean名称为空，则使用类名进行缓存
 		String cacheKey = (StringUtils.hasLength(beanName) ? beanName : clazz.getName());
 		// Quick check on the concurrent map first, with minimal locking.
+		// 先去缓存中查找
 		InjectionMetadata metadata = this.injectionMetadataCache.get(cacheKey);
+		// 如果在缓存中没有并且class不为空
 		if (InjectionMetadata.needsRefresh(metadata, clazz)) {
 			synchronized (this.injectionMetadataCache) {
+				// 则使用double check的方式来保证性能和线程安全
 				metadata = this.injectionMetadataCache.get(cacheKey);
 				if (InjectionMetadata.needsRefresh(metadata, clazz)) {
+					// 保护性操作，先清除原来的属性
 					if (metadata != null) {
 						metadata.clear(pvs);
 					}
+					// 构建自动注入元数据，获取属性和方法中含有 Value 和 Autowired 注解的元素来构建数据实体
 					metadata = buildAutowiringMetadata(clazz);
 					this.injectionMetadataCache.put(cacheKey, metadata);
 				}

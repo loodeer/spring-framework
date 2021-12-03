@@ -57,6 +57,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AutowiredConfigurationTests {
 
 	@Test
+	// @autowired 使用
 	public void testAutowiredConfigurationDependencies() {
 		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
 				AutowiredConfigurationTests.class.getSimpleName() + ".xml", AutowiredConfigurationTests.class);

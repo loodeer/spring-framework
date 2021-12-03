@@ -133,10 +133,14 @@ class ConfigurationClassBeanDefinitionReader {
 	/**
 	 * Read a particular {@link ConfigurationClass}, registering bean definitions
 	 * for the class itself and all of its {@link Bean} methods.
+	 * 我们再来看看ConfigurationClassBeanDefinitionReader是怎么注册解析这些Bean的定义信息的。
+	 * 从入参来看，Spring注解的加载完全依赖 ConfigurationClass模型，可以将其理解成XML加载的一个配置文件。
+	 * 可知，这个实体模型描述了这个 ConfigurationClass中所有Bean的描述信息。
 	 */
 	private void loadBeanDefinitionsForConfigurationClass(
 			ConfigurationClass configClass, TrackedConditionEvaluator trackedConditionEvaluator) {
 
+		// 判断是否可以跳过这个 ConfigurationClass
 		if (trackedConditionEvaluator.shouldSkip(configClass)) {
 			String beanName = configClass.getBeanName();
 			if (StringUtils.hasLength(beanName) && this.registry.containsBeanDefinition(beanName)) {
@@ -146,14 +150,19 @@ class ConfigurationClassBeanDefinitionReader {
 			return;
 		}
 
+		// 如果这个 configClass 是被引入的
 		if (configClass.isImported()) {
 			registerBeanDefinitionForImportedConfigurationClass(configClass);
 		}
+
+		// 处理所有的 Bean 方法
 		for (BeanMethod beanMethod : configClass.getBeanMethods()) {
 			loadBeanDefinitionsForBeanMethod(beanMethod);
 		}
 
+		// 从 configClass 定义的配置文件地址中加载 Bean 配置信息
 		loadBeanDefinitionsFromImportedResources(configClass.getImportedResources());
+		// 加载 Bean 定义信息，主要是处理 ImportSelect 的情况
 		loadBeanDefinitionsFromRegistrars(configClass.getImportBeanDefinitionRegistrars());
 	}
 
