@@ -35,6 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BeanDefinitionBuilderTests {
 
 	@Test
+	//
 	void builderWithBeanClassWithSimpleProperty() {
 		String[] dependsOn = new String[] { "A", "B", "C" };
 		BeanDefinitionBuilder bdb = BeanDefinitionBuilder.rootBeanDefinition(TestBean.class);
@@ -52,6 +53,7 @@ class BeanDefinitionBuilderTests {
 	}
 
 	@Test
+	// 验证 org.springframework.beans.factory.support.BeanDefinitionBuilder.rootBeanDefinition(java.lang.Class<?>, java.lang.String) 方法
 	void builderWithBeanClassAndFactoryMethod() {
 		BeanDefinitionBuilder bdb = BeanDefinitionBuilder.rootBeanDefinition(TestBean.class, "create");
 		RootBeanDefinition rbd = (RootBeanDefinition) bdb.getBeanDefinition();
@@ -61,6 +63,7 @@ class BeanDefinitionBuilderTests {
 	}
 
 	@Test
+	//
 	void builderWithBeanClassName() {
 		BeanDefinitionBuilder bdb = BeanDefinitionBuilder.rootBeanDefinition(TestBean.class.getName());
 		RootBeanDefinition rbd = (RootBeanDefinition) bdb.getBeanDefinition();

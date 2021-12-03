@@ -28,7 +28,7 @@ import org.springframework.lang.Nullable;
  * {@link org.springframework.beans.factory.config.ConfigurableBeanFactory}
  * are available for specific purposes. | ListableBeanFactory 和 ConfigurableBeanFactory 等接口进行了进一步封装，可用于处理对应的场景。
  *
- * <p>This interface is implemented by objects that hold a number of bean definitions, | 实现BeanFacoty接口的对象持有一个 bean definitions 的 map。
+ * <p>This interface is implemented by objects that hold a number of bean definitions, | 实现BeanFactory接口的对象持有一个 bean definitions 的 map。
  * each uniquely identified by a String name. Depending on the bean definition,
  * the factory will return either an independent instance of a contained object
  * (the Prototype design pattern), or a single shared instance (a superior

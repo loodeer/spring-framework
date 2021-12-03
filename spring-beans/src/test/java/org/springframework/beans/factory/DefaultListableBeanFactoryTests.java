@@ -1374,6 +1374,7 @@ class DefaultListableBeanFactoryTests {
 	}
 
 	@Test
+	// https://processon.com/diagraming/619efc690791295908f4dd36
 	void dependsOnCycle() {
 		RootBeanDefinition bd1 = new RootBeanDefinition(TestBean.class);
 		bd1.setDependsOn("tb2");

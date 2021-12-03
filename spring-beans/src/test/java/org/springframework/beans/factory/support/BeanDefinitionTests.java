@@ -29,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class BeanDefinitionTests {
 
 	@Test
+	// RootBeanDefinition equals 方法的重写
 	public void beanDefinitionEquality() {
 		RootBeanDefinition bd = new RootBeanDefinition(TestBean.class);
 		bd.setAbstract(true);
@@ -42,12 +43,14 @@ public class BeanDefinitionTests {
 		otherBd.setAbstract(true);
 		otherBd.setLazyInit(true);
 		otherBd.setScope("request");
+		// 重写了 equals 方法，不同的 RootBeanDefinition 对象 属性值全部相等也是 true
 		assertThat(bd.equals(otherBd)).isTrue();
 		assertThat(otherBd.equals(bd)).isTrue();
 		assertThat(bd.hashCode() == otherBd.hashCode()).isTrue();
 	}
 
 	@Test
+	// RootBeanDefinition equals 方法
 	public void beanDefinitionEqualityWithPropertyValues() {
 		RootBeanDefinition bd = new RootBeanDefinition(TestBean.class);
 		bd.getPropertyValues().add("name", "myName");
@@ -92,6 +95,7 @@ public class BeanDefinitionTests {
 	}
 
 	@Test
+	// constructorArgumentValues 构造器参数，有泛型参数，有索引参数
 	public void beanDefinitionEqualityWithTypedConstructorArguments() {
 		RootBeanDefinition bd = new RootBeanDefinition(TestBean.class);
 		bd.getConstructorArgumentValues().addGenericArgumentValue("test", "int");
@@ -115,6 +119,7 @@ public class BeanDefinitionTests {
 	}
 
 	@Test
+	// 空属性 不影响 equals 判断
 	public void genericBeanDefinitionEquality() {
 		GenericBeanDefinition bd = new GenericBeanDefinition();
 		bd.setParentName("parent");

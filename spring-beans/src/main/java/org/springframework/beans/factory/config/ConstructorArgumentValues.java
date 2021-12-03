@@ -92,7 +92,7 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
-	 * Add an argument value for the given index in the constructor argument list.
+	 * Add an argument value for the given index in the constructor argument list. | 在构造函数参数列表中添加给定索引的参数值。
 	 * @param index the index in the constructor argument list
 	 * @param value the argument value
 	 * @param type the type of the constructor argument
@@ -194,7 +194,7 @@ public class ConstructorArgumentValues {
 	}
 
 	/**
-	 * Add a generic argument value to be matched by type.
+	 * Add a generic argument value to be matched by type. | 添加要按类型匹配的泛型参数值。
 	 * <p>Note: A single generic argument value will just be used once,
 	 * rather than matched multiple times.
 	 * @param value the argument value
